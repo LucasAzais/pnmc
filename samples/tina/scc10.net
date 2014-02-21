@@ -1,0 +1,43 @@
+net {scc 10}
+tr t1_0 a -> d_0
+tr t2_0 c d_0 e_0 -> d_0 b
+tr t3_0 d_0 b -> c a e_0
+pl e_0 (1)
+tr t1_1 a -> d_1
+tr t2_1 c d_1 e_1 -> d_1 b
+tr t3_1 d_1 b -> c a e_1
+pl e_1 (1)
+tr t1_2 a -> d_2
+tr t2_2 c d_2 e_2 -> d_2 b
+tr t3_2 d_2 b -> c a e_2
+pl e_2 (1)
+tr t1_3 a -> d_3
+tr t2_3 c d_3 e_3 -> d_3 b
+tr t3_3 d_3 b -> c a e_3
+pl e_3 (1)
+tr t1_4 a -> d_4
+tr t2_4 c d_4 e_4 -> d_4 b
+tr t3_4 d_4 b -> c a e_4
+pl e_4 (1)
+tr t1_5 a -> d_5
+tr t2_5 c d_5 e_5 -> d_5 b
+tr t3_5 d_5 b -> c a e_5
+pl e_5 (1)
+tr t1_6 a -> d_6
+tr t2_6 c d_6 e_6 -> d_6 b
+tr t3_6 d_6 b -> c a e_6
+pl e_6 (1)
+tr t1_7 a -> d_7
+tr t2_7 c d_7 e_7 -> d_7 b
+tr t3_7 d_7 b -> c a e_7
+pl e_7 (1)
+tr t1_8 a -> d_8
+tr t2_8 c d_8 e_8 -> d_8 b
+tr t3_8 d_8 b -> c a e_8
+pl e_8 (1)
+tr t1_9 a -> d_9
+tr t2_9 c d_9 e_9 -> d_9 b
+tr t3_9 d_9 b -> c a e_9
+pl e_9 (1)
+pl b (1)
+pl a (1)
