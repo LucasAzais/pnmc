@@ -9,6 +9,8 @@ set(SOURCES
     mc/classic/pre.cc
     mc/classic/worker.cc
     mc/mc.cc
+    mc/classic/force/HyperEdge.cpp
+    mc/classic/force/Variable.cpp
     parsers/bpn.cc
     parsers/helpers.cc
     parsers/parse_error.cc
