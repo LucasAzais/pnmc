@@ -351,7 +351,7 @@ const
       std::deque<std::reference_wrapper<const std::string>> identifiers;
       o.flat(std::back_inserter(identifiers));
 
-      for (const auto& path : dead.paths())
+      /*for (const auto& path : dead.paths())
       {
         auto id_cit = identifiers.cbegin();
         auto path_cit = path.cbegin();
@@ -360,7 +360,7 @@ const
           std::cout << id_cit->get() << " : " << *path_cit << ", ";
         }
         std::cout << id_cit->get() << " : " << *path_cit << std::endl;
-      }
+      }*/
     }
   }
 

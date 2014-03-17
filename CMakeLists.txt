@@ -15,9 +15,9 @@ option (NO_COROUTINE "Don't use Boost.Coroutine" OFF)
 
 set(Boost_USE_STATIC_LIBS ON)
 if (NOT NO_COROUTINE)
-  find_package(Boost 1.55.0 REQUIRED COMPONENTS program_options coroutine context system)
+  find_package(Boost 1.54.0 REQUIRED COMPONENTS program_options coroutine context system)
 else ()
-  find_package(Boost 1.55.0 REQUIRED COMPONENTS program_options)
+  find_package(Boost 1.54.0 REQUIRED COMPONENTS program_options)
 endif ()
 message("-- Boost Include: ${Boost_INCLUDE_DIR}")
 message("-- Boost Libraries: ${Boost_LIBRARY_DIRS}")
@@ -59,7 +59,9 @@ set( CMAKE_CXX_FLAGS_RELEASE
 set( CMAKE_CXX_FLAGS_DEBUG
      "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-stack_size -Wl,0x4000000")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-stack_size -Wl,0x4000000")
 
 ################################################################################
 
