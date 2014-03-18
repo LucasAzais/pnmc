@@ -10,6 +10,6 @@ public:
 	double centerOfGravity;
 	std::vector<Variable*> variables;
 	HyperEdge();
-	double getSpan(); // elle ne modifie pas HyperEdge, donc elle devrait être 'const'
+	double getSpan() const;
 };
 

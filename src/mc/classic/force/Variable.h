@@ -1,9 +1,9 @@
 #pragma once
-#include <string>
 #include <vector>
-#include "HyperEdge.h"
+#include <algorithm> // for sort()
 
 class HyperEdge;
+double getSpan(const std::vector<HyperEdge*>& edges);
 
 class Variable
 {
@@ -15,53 +15,52 @@ private:
 public:
 	Variable(const std::string& id, double position);
 
-  static double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
-  static double getSpan(const std::vector<HyperEdge*>& edges);
-  static  bool compare(Variable* v1, Variable* v2)
-  { return v1->position_ < v2->position_; }
+	bool
+		operator<(const Variable& other)
+		const
+	{
+		return position_ < other.position_;
+	}
 
-  // Pour la culture
-  bool
-  operator<(const Variable& other)
-  const
-  {
-    return position_ < other.position_;
-  }
-  
-  const std::string&
-  id()
-  const
-  {
-    return id_;
-  }
-  
-  double
-  position()
-  const
-  {
-    return position_;
-  }
+	const std::string&
+ 	 id()
+  	const
+  	{
+ 	   return id_;
+  	}
 
-  double&
-  position()
-  {
-    return position_;
-  }
-  
-  const std::vector<HyperEdge*>&
-  edges()
-  const
-  {
-    return connected_edges_;
-  }
+	double
+		position()
+		const
+	{
+		return position_;
+	}
 
-  std::vector<HyperEdge*>&
-  edges()
-  {
-    return connected_edges_;
-  }
+	double&
+		position()
+	{
+		return position_;
+	}
+
+	const std::vector<HyperEdge*>&
+		edges()
+		const
+	{
+		return connected_edges_;
+	}
+
+	std::vector<HyperEdge*>&
+		edges()
+	{
+		return connected_edges_;
+	}
 
 };
 
+double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
+bool compare(const Variable* v1, const Variable* v2);
 
+void shuffle(std::vector<Variable*>& variables);
+
+void refreshPositions(std::vector<Variable*>& variables);

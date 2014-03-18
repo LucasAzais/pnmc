@@ -1,87 +1,85 @@
 #include "Variable.h"
+#include "HyperEdge.h"
 #include <algorithm> // for sort()
 #include <iostream>
+#include <time.h> // for seeding std::srand()
 
 Variable::Variable(const std::string& id, double position)
   : id_(id), position_(position)
 {}
 
-double Variable::iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges)
-{
-  // Voir avec les itérateurs ci-dessous
-  // for(int i=0; i<edges.size(); i++) // computes the HyperEdges' centers of gravity
-  // {
-  //   (*(edges[i])).centerOfGravity = 0;
-  //   for(Variable* v : (*(edges[i])).variables) 
-  //   {
-  //     (*(edges[i])).centerOfGravity += (*v).position;
-  //   }
-  //   (*(edges[i])).centerOfGravity /= (double) (*(edges[i])).variables.size();
-  //   //std::cout << "COG = " << (*(edges[i])).centerOfGravity << std::endl;
-  // }
+double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges){
 
-  for (std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
-  {
-    // simplifie l'accès à l'HyperEdge
-    // En effet, it est un pointeur vers un pointeur de HyperEdge
-    HyperEdge& edge = **it;
-  
-    edge.centerOfGravity = 0;
-    for (Variable* v : (*it)->variables)
-    {
-      edge.centerOfGravity += v->position();
-    }
-    edge.centerOfGravity /= edge.variables.size();
-  }
-
-  // C++11
-  // for(auto& edge : edges) // attention! edge reste un HyperEdge*!
-  // {
-  //   edge->centerOfGravity = 0;
-  //   for (Variable* v : edge->variables)
-  //   {
-  //     edge->centerOfGravity += v->position();
-  //   }
-  //   edge->centerOfGravity /= edge->variables.size();
-  // }
-
-  // À faire avec des itérateurs
-	for(int i=0; i<variables.size(); i++) // computes the Variables' new positions
+	for (std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
 	{
-		//std::cout << "previous pos = " << v.position << std::endl;
-		(*(variables[i])).position() = 0;
-		for(int j=0; j<(*(variables[i])).edges().size(); j++)
+		HyperEdge& edge = **it;
+
+		edge.centerOfGravity = 0;
+		for (Variable* v : (*it)->variables)
 		{
-			HyperEdge e = *((*(variables[i])).edges()[j]);
-			(*(variables[i])).position() = (*(variables[i])).position() + e.centerOfGravity;
-			//std::cout << "cog = " << e.centerOfGravity << std::endl;
+			edge.centerOfGravity += v->position();
 		}
-		(*(variables[i])).position() /= (double) (*(variables[i])).edges().size();
-		//std::cout <<" ("<<i<<"=)" << (*(variables[i])).position;
+		edge.centerOfGravity /= edge.variables.size();
 	}
-	
-  std::sort(variables.begin(),variables.end(),Variable::compare); // sorts the variables according to their positions
 
-  //  Avec un lambda
-  // std::sort( variables.begin() ,variables.end() ,
-  //           [](Variable* lhs, Variable* rhs){return lhs->position < rhs->position;});
-  
-	for(int i=0; i<variables.size(); i++) // set the variables' positions according to their order
+	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
 	{
-		(*variables[i]).position() = i;
+		Variable& var = **it;
+		var.position()=0;
+
+		for(std::vector<HyperEdge*>::iterator it = var.edges().begin(); it != var.edges().end(); ++it)
+		{
+			HyperEdge& edge = **it;
+			var.position() += edge.centerOfGravity;
+		}
+		var.position() /= var.edges().size();
 	}
-	return Variable::getSpan(edges);
-}
 
+	std::sort(variables.begin(),variables.end(),compare);
 
-double Variable::getSpan(const std::vector<HyperEdge*>& edges)
-{
+	refreshPositions(variables);
+
+	return getSpan(edges);
+};
+
+double getSpan(const std::vector<HyperEdge*>& edges) {
 	double span = 0;
-	for(HyperEdge* e0 : edges)
+	for(unsigned int i=0; i<edges.size(); i++)
 	{
-		HyperEdge e = *e0;
+		HyperEdge& e = *(edges[i]);
 		span += e.getSpan();
 	}
 	return span;
-}
+};
 
+bool
+	compare(const Variable* v1, const Variable* v2)
+{
+	return (*v1).position() < (*v2).position();
+};
+
+void refreshPositions(std::vector<Variable*>& variables){
+		for(unsigned int i=0; i<variables.size(); i++) // set the variables' positions according to their order
+	{
+		(*variables[i]).position() = i;
+	}
+};
+
+void shuffle(std::vector<Variable*>& variables) {
+	std::srand (time(NULL));
+	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
+	{
+		Variable& var = **it;
+		var.position() = std::rand();
+	}
+	std::sort(variables.begin(),variables.end(),compare);
+};
+
+void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	double previousSpan = INFINITY;
+	double currentSpan = getSpan(edges);
+	while(currentSpan<previousSpan) {
+		previousSpan = currentSpan;
+		currentSpan = iterate(variables,edges);
+	}
+};

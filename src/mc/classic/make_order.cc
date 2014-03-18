@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <random>
+#include <fstream>
+#include <iostream>
 
 #include <unordered_map>
 #include <sdd/order/order.hh>
@@ -9,6 +11,7 @@
 #include "mc/classic/make_order.hh"
 
 #include "mc/classic/force/Variable.h"
+#include "mc/classic/force/HyperEdge.h"
 
 namespace pnmc { namespace mc { namespace classic {
 
@@ -61,6 +64,8 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   {
     edges.push_back(&e);
   }
+
+  //applyForce(variables,edges);
 
   // Build the order here. Let's do a sort in the meantime.
   std::sort( variables.begin(), variables.end()
