@@ -2,6 +2,7 @@
 #include "HyperEdge.h"
 #include <algorithm> // for sort()
 #include <iostream>
+#include <fstream>
 #include <time.h> // for seeding std::srand()
 
 Variable::Variable(const std::string& id, double position)
@@ -76,10 +77,33 @@ void shuffle(std::vector<Variable*>& variables) {
 };
 
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
-	double previousSpan = INFINITY;
+	double previousSpan = std::numeric_limits<double>::max();
 	double currentSpan = getSpan(edges);
 	while(currentSpan<previousSpan) {
 		previousSpan = currentSpan;
 		currentSpan = iterate(variables,edges);
 	}
+};
+
+void exportToRender(std::string filename, std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+		
+	std::ofstream out;
+	out.open (filename);
+	out << variables.size() << std::endl;
+	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
+	{
+		Variable& var = **it;
+		out << var.id() << std::endl;
+	}
+	for(std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
+	{
+		HyperEdge& edge = **it;
+		std::vector<Variable*>& v = edge.variables;
+		out << v.size() << std::endl;
+		for(std::vector<Variable*>::iterator it = v.begin(); it != v.end(); ++it)
+		{
+			Variable& var = **it;
+			out << var.position() << std::endl;
+		}
+	}	
 };
