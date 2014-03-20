@@ -29,7 +29,10 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   unsigned int pos = 0; 
   for (const auto& place : net.places())
   {
-    variables_holder.emplace(place.id, Variable(place.id, pos++));
+    if (place.connected())
+    {
+      variables_holder.emplace(place.id, Variable(place.id, pos++));
+    }
   }
   
   for (const auto& transition : net.transitions())
