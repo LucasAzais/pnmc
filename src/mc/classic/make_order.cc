@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <unordered_map>
+#include <deque>
 #include <sdd/order/order.hh>
 #include <sdd/order/strategies/force.hh>
 
@@ -23,7 +24,7 @@ sdd::order<sdd_conf>
 make_order(const conf::configuration& conf, statistics& stats, const pn::net& net)
 {
   std::unordered_map<std::string, Variable> variables_holder;
-  std::vector<HyperEdge> edges_holder;
+  std::deque<HyperEdge> edges_holder;
 
   unsigned int pos = 0; 
   for (const auto& place : net.places())
@@ -33,7 +34,9 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   
   for (const auto& transition : net.transitions())
   {
-    HyperEdge& edge = *edges_holder.insert(edges_holder.end(), HyperEdge());
+   // HyperEdge& edge = *edges_holder.insert(edges_holder.end(), HyperEdge());
+    edges_holder.emplace_back();
+    HyperEdge& edge = edges_holder.back();
     edge.variables.reserve(transition.post.size() + transition.pre.size());
 
     for (const auto& arc : transition.pre)
