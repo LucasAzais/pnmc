@@ -65,6 +65,8 @@ void shuffle(std::vector<Variable*>& variables);
 
 void refreshPositions(std::vector<Variable*>& variables);
 
+void sortVariables(std::vector<Variable*>& variables);
+
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
 void exportToRender(std::string filename, std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);

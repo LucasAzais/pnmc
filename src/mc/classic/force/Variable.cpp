@@ -28,15 +28,15 @@ double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges
 		Variable& var = **it;
 		var.position()=0;
 
-		for(std::vector<HyperEdge*>::iterator it = var.edges().begin(); it != var.edges().end(); ++it)
+		for(std::vector<HyperEdge*>::iterator it2 = var.edges().begin(); it2 != var.edges().end(); ++it2)
 		{
-			HyperEdge& edge = **it;
+			HyperEdge& edge = **it2;
 			var.position() += edge.centerOfGravity;
 		}
 		var.position() /= var.edges().size();
 	}
 
-	std::sort(variables.begin(),variables.end(),compare);
+	sortVariables(variables);
 
 	refreshPositions(variables);
 
@@ -45,9 +45,9 @@ double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges
 
 double getSpan(const std::vector<HyperEdge*>& edges) {
 	double span = 0;
-	for(unsigned int i=0; i<edges.size(); i++)
+	for(std::vector<HyperEdge*>::const_iterator cit = edges.begin(); cit != edges.end(); ++cit)
 	{
-		HyperEdge& e = *(edges[i]);
+		HyperEdge& e = **cit;
 		span += e.getSpan();
 	}
 	return span;
@@ -64,6 +64,10 @@ void refreshPositions(std::vector<Variable*>& variables){
 	{
 		(*variables[i]).position() = i;
 	}
+};
+
+void sortVariables(std::vector<Variable*>& variables) {
+	std::sort(variables.begin(),variables.end(),compare);	
 };
 
 void shuffle(std::vector<Variable*>& variables) {

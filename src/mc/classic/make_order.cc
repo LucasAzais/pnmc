@@ -71,9 +71,9 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
     edges.push_back(&e);
   }
 
-  exportToRender("withoutForce.txt",variables,edges);
-  applyForce(variables,edges);
-  exportToRender("withForce.txt",variables,edges);
+  if(conf.order_ordering_force) {
+    applyForce(variables,edges);
+  }
 
   // Build the order here. Let's do a sort in the meantime.
   std::sort( variables.begin(), variables.end()
