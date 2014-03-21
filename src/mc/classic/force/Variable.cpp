@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <time.h> // for seeding std::srand()
+#include <set>
 
 Variable::Variable(const std::string& id, double position)
   : id_(id), position_(position)
@@ -83,8 +84,9 @@ void shuffle(std::vector<Variable*>& variables) {
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
 	double previousSpan = std::numeric_limits<double>::max();
 	double currentSpan = getSpan(edges);
-	while(currentSpan<previousSpan) {
+	for(int i=0; i<100; i++) {
 		previousSpan = currentSpan;
+		//std::cout << currentSpan << std::endl;
 		currentSpan = iterate(variables,edges);
 	}
 };
@@ -104,10 +106,25 @@ void exportToRender(std::string filename, std::vector<Variable*>& variables, std
 		HyperEdge& edge = **it;
 		std::vector<Variable*>& v = edge.variables;
 		out << v.size() << std::endl;
-		for(std::vector<Variable*>::iterator it = v.begin(); it != v.end(); ++it)
+		for(std::vector<Variable*>::iterator it2 = v.begin(); it2 != v.end(); ++it2)
 		{
-			Variable& var = **it;
+			Variable& var = **it2;
 			out << var.position() << std::endl;
 		}
 	}	
+};
+
+void removeDuplicates(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
+	{
+		std::vector<HyperEdge*>& es = (*it)->edges();
+		std::set<HyperEdge*> set = std::set<HyperEdge*>(es.begin(),es.end());
+		es = std::vector<HyperEdge*>(set.begin(),set.end());
+	}
+	for(std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
+	{
+		std::vector<Variable*>& vars = (*it)->variables;
+		std::set<Variable*> set = std::set<Variable*>(vars.begin(),vars.end());
+		vars = std::vector<Variable*>(set.begin(),set.end());
+	}
 };
