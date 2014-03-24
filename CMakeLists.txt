@@ -46,8 +46,6 @@ set( SOURCES
   src/Population.h
   src/matrixModel/Matrix.cpp
   src/matrixModel/Matrix.h
-  src/forceModel/HyperEdge.cpp
-  src/forceModel/Variable.cpp
   src/parsers/bpn.cc
   src/parsers/helpers.cc
   src/parsers/parse_error.cc

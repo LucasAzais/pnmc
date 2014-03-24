@@ -4,8 +4,6 @@
 #include <unordered_map>
 
 #include "matrixModel/Matrix.h"
-#include "forceModel/Variable.h"
-#include "forceModel/HyperEdge.h"
 #include "parsers/parse.hh"
 #include "Population.h"
 
