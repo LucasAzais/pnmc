@@ -15,53 +15,63 @@ int main(int argc, char** argv)
 
   Matrix matrix;
 
-  using namespace pnmc::parsers;
+  using namespace pnmc;
 
   if(argc == 1)
   {
     matrix = Matrix(100,100);
   }
-  else  //START PARSER
+  else
   {
+    try
+    {
+      boost::optional<conf::configuration> conf_opt;
+      try
+      {
+        conf_opt = conf::fill_configuration(argc, argv);
+      }
+      catch (const boost::program_options::error& e)
+      {
+        std::cerr << e.what() << std::endl;
+        return 1;
+      }
   
-    if (argc != 3)
-    {
-      std::cerr << "Usage: " << argv[0] << " bpn|prod|tina|xml file" << std::endl;
-      return 1;
+      if (not conf_opt) // --help or --version
+      {
+        return 0;
+      }
+  
+      const auto& conf = *conf_opt;
+      try
+      {
+        auto in = file_or_cin(conf);
+        const auto net_ptr = parsers::parse(conf, *in);
+        if (conf.delete_file and not conf.read_stdin)
+        {
+          ::remove(conf.file_name.c_str());
+        }
+        mc::mc worker(conf);
+        worker(*net_ptr);
+      }
+      catch (const unreadable_file&)
+      {
+        std::cerr << "Can't open '" << conf.file_name << "'." << std::endl;
+        return 2;
+      }
+      catch (const parsers::parse_error& p)
+      {
+        std::cerr << "Error when parsing input." << std::endl;
+        std::cerr << p.what() << std::endl;
+        return 3;
+      }
     }
-    
-    input_format format;
-    if (strcmp(argv[1], "bpn") == 0)
+    catch (std::exception& e)
     {
-      format = input_format::bpn;
-    }
-    else if (strcmp(argv[1], "prod") == 0)
-    {
-      format = input_format::prod;
-    }
-    else if (strcmp(argv[1], "tina") == 0)
-    {
-      format = input_format::tina;
-    }
-    else if (strcmp(argv[1], "xml") == 0)
-    {
-      format = input_format::xml;
-    }
-    else
-    {
-      std::cerr << "Invalid format specification" << std::endl;
-      return 2;
-    }
-    
-    std::ifstream file(argv[2]);
-    if (not file.is_open())
-    {
-      std::cerr << "Can't read file '" << argv[2] << "'" << std::endl;
-      return 3;
+      std::cerr << "Fatal error. Please report the following to a.hamez@isae.fr." << std::endl;
+      std::cerr << e.what() << std::endl;
+      return -1;
     }
   
-    const auto net_ptr = parse(format, file);
-
     matrix = Matrix(*net_ptr);
   } //END PARSER
 
