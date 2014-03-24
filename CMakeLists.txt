@@ -6,42 +6,16 @@ cmake_minimum_required (VERSION 2.8.10)
 
 project (pnmc)
 
-option (PACKED "Pack structures" OFF)
-option (PROFILE "Profile the library" OFF)
-option (LIBSDD "Path to libsdd")
-option (NO_COROUTINE "Don't use Boost.Coroutine" OFF)
-
-################################################################################
-
 set(Boost_USE_STATIC_LIBS ON)
-if (NOT NO_COROUTINE)
-  find_package(Boost 1.54.0 REQUIRED COMPONENTS program_options coroutine context system)
-else ()
-  find_package(Boost 1.54.0 REQUIRED COMPONENTS program_options)
-endif ()
+find_package(Boost 1.54.0 REQUIRED)
 message("-- Boost Include: ${Boost_INCLUDE_DIR}")
 message("-- Boost Libraries: ${Boost_LIBRARY_DIRS}")
-
-################################################################################
-
-if (PACKED)
-  add_definitions("-DLIBSDD_PACKED")
-endif ()
-
-if (PROFILE)
-  add_definitions("-DLIBSDD_PROFILE")
-endif ()
 
 ################################################################################
 
 if (NO_COROUTINE)
   add_definitions("-DHAS_NO_BOOST_COROUTINE")
 endif ()
-
-if (NOT CMAKE_BUILD_TYPE)
-  message(STATUS "No build type selected, default to Release")
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
 
 add_definitions("-Wall")
 add_definitions("-std=c++11")
@@ -59,18 +33,34 @@ set( CMAKE_CXX_FLAGS_RELEASE
 set( CMAKE_CXX_FLAGS_DEBUG
      "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
-
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-stack_size -Wl,0x4000000")
-
 ################################################################################
 
 include_directories("${Boost_INCLUDE_DIRS}")
 include_directories("${PROJECT_SOURCE_DIR}/src")
-include_directories("${LIBSDD}")
 
 ################################################################################
 
-add_subdirectory(src)
+set( SOURCES
+  src/Main.cpp
+  src/Population.cpp 
+  src/Population.h
+  src/matrixModel/Matrix.cpp
+  src/matrixModel/Matrix.h
+  src/forceModel/HyperEdge.cpp
+  src/forceModel/Variable.cpp
+  src/parsers/bpn.cc
+  src/parsers/helpers.cc
+  src/parsers/parse_error.cc
+  src/parsers/parse.cc
+  src/parsers/prod.cc
+  src/parsers/tina.cc
+  src/parsers/xml.cc
+  src/pn/module.cc
+  src/pn/net.cc
+  src/pn/place.cc
+  src/pn/transition.cc
+)
 
-################################################################################
+add_executable(matrix ${SOURCES})
+target_link_libraries(matrix ${Boost_LIBRARIES})
+
