@@ -69,6 +69,8 @@ void sortVariables(std::vector<Variable*>& variables);
 
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
+void plotForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
+
 void exportToRender(std::string filename, std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
-void removeDuplicates(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
+//void removeDuplicates(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);

@@ -1,5 +1,6 @@
 #include "Variable.h"
 #include "HyperEdge.h"
+#include "Link.h"
 #include <algorithm> // for sort()
 #include <iostream>
 #include <fstream>
@@ -17,11 +18,11 @@ double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges
 		HyperEdge& edge = **it;
 
 		edge.centerOfGravity = 0;
-		for (Variable* v : (*it)->variables)
+		for (Link link : (*it)->links)
 		{
-			edge.centerOfGravity += v->position();
+			edge.centerOfGravity += link.variable->position();
 		}
-		edge.centerOfGravity /= edge.variables.size();
+		edge.centerOfGravity /= edge.links.size();
 	}
 
 	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
@@ -91,6 +92,19 @@ void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edge
 	}
 };
 
+void plotForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	std::ofstream myfile;
+	myfile.open ("evolution.csv");
+
+	myfile << getSpan(edges) << ',';
+
+	for(int i=0; i<100; i++) {
+		myfile << iterate(variables,edges) << ',';
+	}
+	myfile << std::endl;
+	myfile.close();
+};
+
 void exportToRender(std::string filename, std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
 		
 	std::ofstream out;
@@ -104,17 +118,17 @@ void exportToRender(std::string filename, std::vector<Variable*>& variables, std
 	for(std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
 	{
 		HyperEdge& edge = **it;
-		std::vector<Variable*>& v = edge.variables;
-		out << v.size() << std::endl;
-		for(std::vector<Variable*>::iterator it2 = v.begin(); it2 != v.end(); ++it2)
+		std::vector<Link>& l = edge.links;
+		out << l.size() << std::endl;
+		for(std::vector<Link>::iterator it2 = l.begin(); it2 != l.end(); ++it2)
 		{
-			Variable& var = **it2;
-			out << var.position() << std::endl;
+			Link& link = *it2;
+			out << link.variable->position() << std::endl;
 		}
 	}	
 };
 
-void removeDuplicates(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+/*void removeDuplicates(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
 	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
 	{
 		std::vector<HyperEdge*>& es = (*it)->edges();
@@ -127,4 +141,4 @@ void removeDuplicates(std::vector<Variable*>& variables, std::vector<HyperEdge*>
 		std::set<Variable*> set = std::set<Variable*>(vars.begin(),vars.end());
 		vars = std::vector<Variable*>(set.begin(),set.end());
 	}
-};
+};*/

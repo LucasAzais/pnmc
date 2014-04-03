@@ -11,6 +11,7 @@
 #include "mc/classic/dump.hh"
 #include "mc/classic/make_order.hh"
 
+#include "mc/classic/force/Link.h"
 #include "mc/classic/force/Variable.h"
 #include "mc/classic/force/HyperEdge.h"
 
@@ -40,19 +41,19 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
    // HyperEdge& edge = *edges_holder.insert(edges_holder.end(), HyperEdge());
     edges_holder.emplace_back();
     HyperEdge& edge = edges_holder.back();
-    edge.variables.reserve(transition.post.size() + transition.pre.size());
+    edge.links.reserve(transition.post.size() + transition.pre.size());
 
     for (const auto& arc : transition.pre)
     {
       Variable& v = variables_holder.find(arc.first)->second;
-      edge.variables.push_back(&v);
+      edge.links.push_back(Link(&v,PRE));
       v.edges().push_back(&edge);
     }
 
     for (const auto& arc : transition.post)
     {
       Variable& v = variables_holder.find(arc.first)->second;
-      edge.variables.push_back(&v);
+      edge.links.push_back(Link(&v,POST));
       v.edges().push_back(&edge);
     }
   }
@@ -71,8 +72,15 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
     edges.push_back(&e);
   }
 
+	/*if(conf.order_force_flat) {
+		sortVariables(variables);
+		refreshPositions(variables);
+		std::cout << "improved force" << std::endl;
+	}*/
+
   if(conf.order_ordering_force) {
-    applyForce(variables,edges);
+		//removeDuplicates(variables,edges); std::cout << "removed duplicates" << std::endl;
+    plotForce(variables,edges);
   }
 
   // Build the order here. Let's do a sort in the meantime.
