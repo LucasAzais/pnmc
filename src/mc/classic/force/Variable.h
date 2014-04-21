@@ -59,6 +59,8 @@ public:
 
 double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
+void computeCOG(std::vector<HyperEdge*>& edges);
+
 bool compare(const Variable* v1, const Variable* v2);
 
 void shuffle(std::vector<Variable*>& variables);
@@ -68,6 +70,7 @@ void refreshPositions(std::vector<Variable*>& variables);
 void sortVariables(std::vector<Variable*>& variables);
 
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
+void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
 void plotForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 

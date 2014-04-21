@@ -76,11 +76,24 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
 		sortVariables(variables);
 		refreshPositions(variables);
 		std::cout << "improved force" << std::endl;
-	}*/
+	}
 
   if(conf.order_ordering_force) {
 		//removeDuplicates(variables,edges); std::cout << "removed duplicates" << std::endl;
     plotForce(variables,edges);
+		
+  }*/
+
+  if(conf.order_ordering_force) {
+    std::cout << "using simple force" << std::endl;
+    applyForce(variables,edges);
+  }
+  else if(conf.order_force_flat) {
+    std::cout << "using enhanced force" << std::endl;
+    applyForce2(variables,edges);
+  }
+  else {
+    std::cout << "without ordering" << std::endl;
   }
 
   // Build the order here. Let's do a sort in the meantime.

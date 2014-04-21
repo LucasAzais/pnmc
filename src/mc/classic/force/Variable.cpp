@@ -13,17 +13,7 @@ Variable::Variable(const std::string& id, double position)
 
 double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges){
 
-	for (std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
-	{
-		HyperEdge& edge = **it;
-
-		edge.centerOfGravity = 0;
-		for (Link link : (*it)->links)
-		{
-			edge.centerOfGravity += link.variable->position();
-		}
-		edge.centerOfGravity /= edge.links.size();
-	}
+	computeCOG(edges);
 
 	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
 	{
@@ -43,6 +33,21 @@ double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges
 	refreshPositions(variables);
 
 	return getSpan(edges);
+};
+
+void computeCOG(std::vector<HyperEdge*>& edges) {
+	for (std::vector<HyperEdge*>::iterator it = edges.begin(); it != edges.end(); ++it)
+	{
+		HyperEdge& edge = **it;
+
+		edge.centerOfGravity = 0;
+		for (Link link : (*it)->links)
+		{
+			edge.centerOfGravity += link.variable->position();
+		}
+		edge.centerOfGravity /= edge.links.size();
+	}
+
 };
 
 double getSpan(const std::vector<HyperEdge*>& edges) {
@@ -92,13 +97,24 @@ void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edge
 	}
 };
 
+void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	double previousSpan = std::numeric_limits<double>::max();
+	double currentSpan = getSpan(edges);
+	for(int i=0; i<100; i++) {
+		previousSpan = currentSpan;
+		order_pre_post(variables,edges);
+		currentSpan = iterate(variables,edges);
+	}
+};
+
 void plotForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
 	std::ofstream myfile;
-	myfile.open ("evolution.csv");
+	myfile.open ("evolution.csv",std::fstream::app);
 
 	myfile << getSpan(edges) << ',';
 
 	for(int i=0; i<100; i++) {
+		order_pre_post(variables,edges);
 		myfile << iterate(variables,edges) << ',';
 	}
 	myfile << std::endl;

@@ -4,8 +4,8 @@
 
 enum Relation { UNDEF, PRE, PRE_POST, POST };
 
-class Link {
-	public:
+struct Link {
+	
 		Variable* variable;
 		Relation relation;
 		Link(Variable* var, Relation rel) { variable=var; relation=rel;};
