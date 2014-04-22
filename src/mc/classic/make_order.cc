@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 
+#include <set>
 #include <unordered_map>
 #include <deque>
 #include <sdd/order/order.hh>
@@ -38,23 +39,39 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   
   for (const auto& transition : net.transitions())
   {
-   // HyperEdge& edge = *edges_holder.insert(edges_holder.end(), HyperEdge());
     edges_holder.emplace_back();
     HyperEdge& edge = edges_holder.back();
     edge.links.reserve(transition.post.size() + transition.pre.size());
+    std::set<Variable*> pre_transitions, post_transitions;
 
     for (const auto& arc : transition.pre)
     {
       Variable& v = variables_holder.find(arc.first)->second;
-      edge.links.push_back(Link(&v,PRE));
+      //edge.links.push_back(Link(&v,PRE));
+      pre_transitions.insert(&v);
       v.edges().push_back(&edge);
     }
 
     for (const auto& arc : transition.post)
     {
       Variable& v = variables_holder.find(arc.first)->second;
-      edge.links.push_back(Link(&v,POST));
+      //edge.links.push_back(Link(&v,POST));
+      post_transitions.insert(&v);
       v.edges().push_back(&edge);
+    }
+
+    for(Variable* v : pre_transitions) {
+      if(post_transitions.find(v) == post_transitions.end()) {
+        edge.links.push_back(Link(v,PRE));
+      }
+      else {
+        edge.links.push_back(Link(v,PRE_POST));  
+      }
+    }
+    for(Variable* v : post_transitions) {
+      if(pre_transitions.find(v) == pre_transitions.end()) {
+        edge.links.push_back(Link(v,POST));
+      }
     }
   }
   
@@ -71,18 +88,6 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   {
     edges.push_back(&e);
   }
-
-	/*if(conf.order_force_flat) {
-		sortVariables(variables);
-		refreshPositions(variables);
-		std::cout << "improved force" << std::endl;
-	}
-
-  if(conf.order_ordering_force) {
-		//removeDuplicates(variables,edges); std::cout << "removed duplicates" << std::endl;
-    plotForce(variables,edges);
-		
-  }*/
 
   if(conf.order_ordering_force) {
     std::cout << "using simple force" << std::endl;
