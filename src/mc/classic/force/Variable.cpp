@@ -15,18 +15,7 @@ double iterate(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges
 
 	computeCOG(edges);
 
-	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
-	{
-		Variable& var = **it;
-		var.position()=0;
-
-		for(std::vector<HyperEdge*>::iterator it2 = var.edges().begin(); it2 != var.edges().end(); ++it2)
-		{
-			HyperEdge& edge = **it2;
-			var.position() += edge.centerOfGravity;
-		}
-		var.position() /= var.edges().size();
-	}
+	computeCOG(variables);
 
 	sortVariables(variables);
 
@@ -48,6 +37,21 @@ void computeCOG(std::vector<HyperEdge*>& edges) {
 		edge.centerOfGravity /= edge.links.size();
 	}
 
+};
+
+void computeCOG(std::vector<Variable*>& variables) {
+	for(std::vector<Variable*>::iterator it = variables.begin(); it != variables.end(); ++it)
+	{
+		Variable& var = **it;
+		var.position()=0;
+
+		for(std::vector<HyperEdge*>::iterator it2 = var.edges().begin(); it2 != var.edges().end(); ++it2)
+		{
+			HyperEdge& edge = **it2;
+			var.position() += edge.centerOfGravity;
+		}
+		var.position() /= var.edges().size();
+	}
 };
 
 double getSpan(const std::vector<HyperEdge*>& edges) {
@@ -92,12 +96,22 @@ void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edge
 	double currentSpan = getSpan(edges);
 	for(int i=0; i<100; i++) {
 		previousSpan = currentSpan;
-		//std::cout << currentSpan << std::endl;
 		currentSpan = iterate(variables,edges);
 	}
 };
 
 void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	double previousSpan = std::numeric_limits<double>::max();
+	double currentSpan = getSpan(edges);
+	for(int i=0; i<100; i++) {
+		previousSpan = currentSpan;
+		order_pre_post(variables,edges); // ++
+		currentSpan = iterate(variables,edges);
+	}
+};
+
+void applyForce3(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	order_edges(variables,edges); // ++
 	double previousSpan = std::numeric_limits<double>::max();
 	double currentSpan = getSpan(edges);
 	for(int i=0; i<100; i++) {

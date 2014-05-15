@@ -44,3 +44,25 @@ void order_pre_post( std::vector<Variable*>& variables, std::vector<HyperEdge*>&
 	sortVariables(variables);
 	refreshPositions(variables);
 };
+
+// compare 2 edges using their number of variables, and then their barycenters
+bool compare_edges(const HyperEdge* e1, const HyperEdge* e2) {
+	if( e1->links.size() == e2->links.size() ) {
+		return e1->centerOfGravity < e1->centerOfGravity;
+	}
+	else {
+		return e1->links.size() < e2->links.size();
+	}
+};
+
+void order_edges( std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges ) {
+
+	computeCOG(edges);
+	std::stable_sort(edges.begin(),edges.end());
+	for(unsigned int i=0; i<edges.size(); i++) {
+		HyperEdge* e = edges[i];
+		e->centerOfGravity = i;
+	}
+	computeCOG(variables);
+	sortVariables(variables);
+};

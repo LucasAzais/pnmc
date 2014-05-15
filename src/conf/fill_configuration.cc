@@ -78,6 +78,10 @@ const auto order_random_str = "order-random";
 const auto order_flat_str = "order-flat";
 const auto order_min_height_str = "order-min-height";
 const auto order_force_str = "order-force";
+const auto natural_str = "natural";
+const auto force1_str = "force1";
+const auto force2_str = "force2";
+const auto force3_str = "force3";
 
 // Homomorphisms options
 const auto hom_show_relation_str = "hom-show-relation";
@@ -129,6 +133,10 @@ fill_configuration(int argc, char** argv)
     (order_min_height_str       , po::value<unsigned int>()->default_value(10)
                                 , "Minimal number of variables at every level of the SDD")
     (order_force_str            , "Use the FORCE ordering heuristic")
+    (natural_str            , "natural")
+    (force1_str            , "force 1")
+    (force2_str            , "force 2")
+    (force3_str            , "force 3")
   ;
 
   po::options_description hom_options("Homomorphisms options");
@@ -246,6 +254,10 @@ fill_configuration(int argc, char** argv)
   conf.order_force_flat = vm.count(order_flat_str);
   conf.order_min_height = vm[order_min_height_str].as<unsigned int>();
   conf.order_ordering_force = vm.count(order_force_str);
+  conf.natural = vm.count(natural_str);
+  conf.force1 = vm.count(force1_str);
+  conf.force2 = vm.count(force2_str);
+  conf.force3 = vm.count(force3_str);
 
   // Hom options
   conf.show_relation = vm.count(hom_show_relation_str);

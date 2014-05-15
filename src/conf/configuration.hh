@@ -39,6 +39,10 @@ struct configuration
 
   /// @brief Remove all hierarchy from order.
   bool order_force_flat;
+  bool natural;
+  bool force1;
+  bool force2;
+  bool force3;
 
   /// @brief Use the FORCE ordering heuristic.
   bool order_ordering_force;

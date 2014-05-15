@@ -16,3 +16,7 @@ public:
 void order_pre_post( std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges );
 
 bool compareSpan(const HyperEdge* e1, const HyperEdge* e2);
+
+bool compare_edges(const HyperEdge* e1, const HyperEdge* e2);
+
+void order_edges( std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges );
