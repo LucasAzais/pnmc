@@ -74,6 +74,7 @@ void sortVariables(std::vector<Variable*>& variables);
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 void applyForce3(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
+void applyForce4(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 
 void plotForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 

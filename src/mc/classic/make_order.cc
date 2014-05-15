@@ -89,16 +89,24 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
     edges.push_back(&e);
   }
 
-  if(conf.order_ordering_force) {
-    std::cout << "using simple force" << std::endl;
+  if(conf.natural) {
+    std::cout << "with natural order" << std::endl;
+  }
+  else if(conf.force1) {
+    std::cout << "with basic force" << std::endl;
     applyForce(variables,edges);
   }
-  else if(conf.order_force_flat) {
-    std::cout << "using enhanced force" << std::endl;
+  else if(conf.force2) {
+    std::cout << "with pre-post force" << std::endl;
     applyForce2(variables,edges);
   }
-  else {
-    std::cout << "without ordering" << std::endl;
+  else if(conf.force3) {
+    std::cout << "with force ++" << std::endl;
+    applyForce3(variables,edges);
+  }
+  else if(conf.force4) {
+    std::cout << "with force ++ reversed" << std::endl;
+    applyForce4(variables,edges);
   }
 
   // Build the order here. Let's do a sort in the meantime.

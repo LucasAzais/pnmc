@@ -55,10 +55,20 @@ bool compare_edges(const HyperEdge* e1, const HyperEdge* e2) {
 	}
 };
 
-void order_edges( std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges ) {
+bool compare_edges_reversed(const HyperEdge* e1, const HyperEdge* e2) {
+	if( e1->links.size() == e2->links.size() ) {
+		return e1->centerOfGravity < e1->centerOfGravity;
+	}
+	else {
+		return e1->links.size() > e2->links.size();
+	}
+};
+
+void order_edges( std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges, bool reversed ) {
 
 	computeCOG(edges);
-	std::stable_sort(edges.begin(),edges.end());
+	if(reversed) { std::stable_sort(edges.begin(), edges.end(), compare_edges_reversed); }
+	else { std::stable_sort(edges.begin(), edges.end(), compare_edges); }
 	for(unsigned int i=0; i<edges.size(); i++) {
 		HyperEdge* e = edges[i];
 		e->centerOfGravity = i;

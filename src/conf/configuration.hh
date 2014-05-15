@@ -43,6 +43,7 @@ struct configuration
   bool force1;
   bool force2;
   bool force3;
+  bool force4;
 
   /// @brief Use the FORCE ordering heuristic.
   bool order_ordering_force;

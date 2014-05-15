@@ -111,7 +111,18 @@ void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edg
 };
 
 void applyForce3(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
-	order_edges(variables,edges); // ++
+	order_edges(variables,edges,true); // ++
+	double previousSpan = std::numeric_limits<double>::max();
+	double currentSpan = getSpan(edges);
+	for(int i=0; i<100; i++) {
+		previousSpan = currentSpan;
+		order_pre_post(variables,edges);
+		currentSpan = iterate(variables,edges);
+	}
+};
+
+void applyForce4(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
+	order_edges(variables,edges,false); // ++
 	double previousSpan = std::numeric_limits<double>::max();
 	double currentSpan = getSpan(edges);
 	for(int i=0; i<100; i++) {

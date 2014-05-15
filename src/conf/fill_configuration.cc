@@ -82,6 +82,7 @@ const auto natural_str = "natural";
 const auto force1_str = "force1";
 const auto force2_str = "force2";
 const auto force3_str = "force3";
+const auto force4_str = "force4";
 
 // Homomorphisms options
 const auto hom_show_relation_str = "hom-show-relation";
@@ -137,6 +138,7 @@ fill_configuration(int argc, char** argv)
     (force1_str            , "force 1")
     (force2_str            , "force 2")
     (force3_str            , "force 3")
+    (force4_str            , "force 4")
   ;
 
   po::options_description hom_options("Homomorphisms options");
@@ -258,6 +260,7 @@ fill_configuration(int argc, char** argv)
   conf.force1 = vm.count(force1_str);
   conf.force2 = vm.count(force2_str);
   conf.force3 = vm.count(force3_str);
+  conf.force4 = vm.count(force4_str);
 
   // Hom options
   conf.show_relation = vm.count(hom_show_relation_str);
