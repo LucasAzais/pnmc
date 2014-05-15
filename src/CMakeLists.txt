@@ -15,6 +15,7 @@ set(SOURCES
     parsers/helpers.cc
     parsers/parse_error.cc
     parsers/parse.cc
+    parsers/pnml.cc
     parsers/prod.cc
     parsers/tina.cc
     parsers/xml.cc
