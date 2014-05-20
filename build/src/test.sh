@@ -10,4 +10,4 @@ echo put args such as --tina samples/tina/filepath
 ./pnmc $1 $2 --order_pre_post
 ./pnmc $1 $2 --force3
 
-notify-send "$2 done !"
+#notify-send "$2 done !"
