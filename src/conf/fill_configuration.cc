@@ -79,7 +79,10 @@ const auto order_flat_str = "order-flat";
 const auto order_min_height_str = "order-min-height";
 const auto order_force_str = "order-force";
 const auto natural_str = "natural";
-const auto force1_str = "force1";
+const auto force_str = "force";
+const auto order_edges_str = "order_edges_str";
+const auto order_edges_reversed_str = "order_edges_reversed";
+const auto order_pre_post_str = "order_pre_post";
 const auto force2_str = "force2";
 const auto force3_str = "force3";
 const auto force4_str = "force4";
@@ -135,7 +138,10 @@ fill_configuration(int argc, char** argv)
                                 , "Minimal number of variables at every level of the SDD")
     (order_force_str            , "Use the FORCE ordering heuristic")
     (natural_str            , "natural")
-    (force1_str            , "force 1")
+    (force_str            , "force")
+    (order_edges_str            , "order_edges")
+    (order_edges_reversed_str  , "order_edges_reversed")
+    (order_pre_post_str     , "order_pre_post_str")       
     (force2_str            , "force 2")
     (force3_str            , "force 3")
     (force4_str            , "force 4")
@@ -257,7 +263,10 @@ fill_configuration(int argc, char** argv)
   conf.order_min_height = vm[order_min_height_str].as<unsigned int>();
   conf.order_ordering_force = vm.count(order_force_str);
   conf.natural = vm.count(natural_str);
-  conf.force1 = vm.count(force1_str);
+  conf.force = vm.count(force_str);
+  conf.order_edges = vm.count(order_edges_str);
+  conf.order_edges_reversed = vm.count(order_edges_reversed_str);
+  conf.order_pre_post = vm.count(order_pre_post_str);
   conf.force2 = vm.count(force2_str);
   conf.force3 = vm.count(force3_str);
   conf.force4 = vm.count(force4_str);

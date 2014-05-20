@@ -91,6 +91,7 @@ void shuffle(std::vector<Variable*>& variables) {
 	std::sort(variables.begin(),variables.end(),compare);
 };
 
+// to delete
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
 	double previousSpan = std::numeric_limits<double>::max();
 	double currentSpan = getSpan(edges);
@@ -100,34 +101,29 @@ void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edge
 	}
 };
 
-void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
-	double previousSpan = std::numeric_limits<double>::max();
-	double currentSpan = getSpan(edges);
-	for(int i=0; i<100; i++) {
-		previousSpan = currentSpan;
-		order_pre_post(variables,edges); // ++
-		currentSpan = iterate(variables,edges);
+void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges, 
+	bool ordered_edges, bool reverse_order_edges, bool ordered_pre_post) {
+
+	if(ordered_edges) { order_edges(variables,edges,reverse_order_edges); }
+	double min_span = getSpan(edges);
+	int counter = 0;
+	for(int i=0; i<1000; i++) {
+		if(ordered_pre_post) { order_pre_post(variables,edges); }
+		double current_span = iterate(variables,edges);
+		if(current_span < min_span) { min_span = current_span; }
+		else {
+			counter ++;
+			if(counter > 10) { return; }
+		}
 	}
 };
 
-void applyForce3(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
-	order_edges(variables,edges,true); // ++
+void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges, bool reversed) {
 	double previousSpan = std::numeric_limits<double>::max();
 	double currentSpan = getSpan(edges);
 	for(int i=0; i<100; i++) {
 		previousSpan = currentSpan;
-		order_pre_post(variables,edges);
-		currentSpan = iterate(variables,edges);
-	}
-};
-
-void applyForce4(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges) {
-	order_edges(variables,edges,false); // ++
-	double previousSpan = std::numeric_limits<double>::max();
-	double currentSpan = getSpan(edges);
-	for(int i=0; i<100; i++) {
-		previousSpan = currentSpan;
-		order_pre_post(variables,edges);
+		order_edges(variables,edges,reversed);
 		currentSpan = iterate(variables,edges);
 	}
 };

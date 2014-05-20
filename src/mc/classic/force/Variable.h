@@ -72,9 +72,9 @@ void refreshPositions(std::vector<Variable*>& variables);
 void sortVariables(std::vector<Variable*>& variables);
 
 void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
-void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
-void applyForce3(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
-void applyForce4(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
+void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges, 
+	bool ordered_edges, bool reverse_order_edges, bool ordered_pre_post);
+void applyForce2(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges, bool reversed);
 
 void plotForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edges);
 

@@ -40,7 +40,10 @@ struct configuration
   /// @brief Remove all hierarchy from order.
   bool order_force_flat;
   bool natural;
-  bool force1;
+  bool force;
+  bool order_edges;
+  bool order_edges_reversed;
+  bool order_pre_post;
   bool force2;
   bool force3;
   bool force4;

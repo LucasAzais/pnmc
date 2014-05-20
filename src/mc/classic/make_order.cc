@@ -92,21 +92,41 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   if(conf.natural) {
     std::cout << "with natural order" << std::endl;
   }
-  else if(conf.force1) {
+  else if(conf.force) {
     std::cout << "with basic force" << std::endl;
     applyForce(variables,edges);
   }
   else if(conf.force2) {
-    std::cout << "with pre-post force" << std::endl;
-    applyForce2(variables,edges);
+    std::cout << "with order_edges inside force" << std::endl;
+    applyForce2(variables,edges,true);
+  }
+  else if(conf.order_edges) {
+    if(conf.order_pre_post) {
+      std::cout << "with order_edges + order_pre_post" << std::endl;
+      applyForce(variables,edges,true,false,true);
+    }
+    else {
+      std::cout << "with order_edges" << std::endl;
+      applyForce(variables,edges,true,false,false);
+    }
+  }
+  else if(conf.order_edges_reversed) {
+    if(conf.order_pre_post) {
+      std::cout << "with order_edges_reversed + order_pre_post" << std::endl;
+      applyForce(variables,edges,true,true,true);
+    }
+    else {
+      std::cout << "with order_edges_reversed" << std::endl;
+      applyForce(variables,edges,true,true,false);
+    }
+  }
+  else if(conf.order_pre_post) {
+    std::cout << "with order_pre_post" << std::endl;
+    applyForce(variables,edges,false,false,true);
   }
   else if(conf.force3) {
-    std::cout << "with force ++" << std::endl;
-    applyForce3(variables,edges);
-  }
-  else if(conf.force4) {
-    std::cout << "with force ++ reversed" << std::endl;
-    applyForce4(variables,edges);
+    std::cout << "with order_edges_reversed inside force" << std::endl;
+    applyForce2(variables,edges,false);
   }
 
   // Build the order here. Let's do a sort in the meantime.
