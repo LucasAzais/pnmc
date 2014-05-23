@@ -271,7 +271,8 @@ worker::operator()(const pn::net& net)
 const
 {
   // Initialize the libsdd.
-  auto manager = sdd::manager<sdd_conf>::init();
+  auto manager = sdd::init<sdd_conf>
+();
 
   statistics stats(conf);
 
