@@ -1,5 +1,7 @@
 set(SOURCES
     main.cc
+    Population.cpp
+    matrixModel/Matrix.cpp
     conf/fill_configuration.cc
     mc/classic/dead.cc
     mc/classic/dump.cc

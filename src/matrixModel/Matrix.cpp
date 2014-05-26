@@ -6,6 +6,7 @@
 #include <climits>
 #include <unordered_set>
 #include <unordered_map>
+#include <boost/lexical_cast.hpp>
 
 #include "Matrix.h"
 
@@ -34,6 +35,8 @@ Matrix::Matrix(const unsigned int height, const unsigned int width)
 
   for (unsigned int i = 0; i<rowNumber; ++i)
   {
+    idList.push_back( boost::lexical_cast<std::string>( i ) );
+
     for (unsigned int j = 0; j<columnNumber; ++j)
     {
 //      randomBool = (rand() % 2 == 0 ? false : true ); //P(1) = P(0)
@@ -49,41 +52,6 @@ Matrix::Matrix(const unsigned int height, const unsigned int width)
 
   norm();
 }
-
-/*
-Matrix::Matrix(std::vector<Variable*> variables, std::vector<HyperEdge*> edges)
-{
-  
-  columnNumber = edges.size();
-  rowNumber = variables.size();
-
-  row_type currentRow;
-  
-  for (const Variable* currentVar : variables)
-  {
-    for(const HyperEdge* currentEdge : currentVar->edges())
-    {
-      //MEME ADRESSE ? apparement non ...
-      for(unsigned int i = 0; i<edges.size(); ++i)
-      {
-        if(currentEdge+i == edges.at(i))
-        {
-          currentRow.push_back( true );
-        }
-        else
-        {
-          currentRow.push_back( false );
-        }
-      }
-    }
-    
-    auto insertion = setMatrix.insert( currentRow );
-    matrix.push_back(&(*insertion.first));
-    currentRow.clear();
-  } 
-  
-}
-*/
 
 Matrix::Matrix(const pnmc::pn::net& net)
 {
@@ -113,6 +81,7 @@ Matrix::Matrix(const pnmc::pn::net& net)
       currentRow[pos] = true;
     }
 
+    idList.push_back(place.id);
     auto insertion = setMatrix.insert( currentRow );
     matrix.push_back(&(*insertion.first));
     //currentRow.clear();
@@ -121,6 +90,7 @@ Matrix::Matrix(const pnmc::pn::net& net)
 
   columnNumber = net.transitions().size();
   rowNumber = matrix.size();
+
   norm();
 }
 
@@ -131,6 +101,7 @@ Matrix* Matrix::copy()
   newMatrix->columnNumber = this->columnNumber;
   newMatrix->rowNumber = this->rowNumber;
   newMatrix->currentNorm = this->currentNorm;
+  newMatrix->idList = std::vector<std::string>(this->idList);
 
   newMatrix->matrix = matrix_type(this->matrix);
   
@@ -223,6 +194,10 @@ void Matrix::swapRows(const unsigned int row1, const unsigned int row2)
   const row_type* temp = matrix[row1];
   matrix[row1] = matrix[row2];
   matrix[row2] = temp;
+
+  const std::string tempInt = idList.at(row1);
+  idList.at(row1) = idList.at(row2);
+  idList.at(row2) = tempInt;
 
 }
 

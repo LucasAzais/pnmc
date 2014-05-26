@@ -52,35 +52,19 @@ void Population::select(const unsigned int selectionSize)
   population.erase( population.begin() + selectionSize, population.end());
   currentSize = selectionSize;
 
-  /*
-  std::vector<unsigned int> norms = std::vector<unsigned int>(selectionSize, 0); 
-  std::vector<unsigned int> bestNormsIndex = std::vector<unsigned int>(selectionSize, UINT_MAX);  
+}
 
-  for(unsigned int i = 0; i < currentSize; ++i)
+Matrix* Population::getFinalMatrix()
+{
+  select(1);
+  if(currentSize == 1)
   {
-    norms[i] = population[i]->norm();
+    return population.at(0);
   }
-
-  for(unsigned int j = 0; j < selectionSize; ++j)
+  else
   {
-    for(unsigned int k = 0; k < currentSize; ++k)
-    {
-      if(norms[k]<norms[bestNormsIndex[j]])
-      {
-        //Put UINT_MAX back in, so that it doesn't pick the same norm again and again.
-        bestNormsIndex[j] = k;
-        norms[k] = UINT_MAX;
-      }
-    }
+    return NULL;
   }
-
-  for(unsigned int i = 0; i < selectionSize; ++i)
-  {
-    population[bestNormsIndex[i]]->erase();
-  }
-
-  currentSize = selectionSize;
-  */
 }
 
 void Population::mutate(const unsigned int newPopulationSize)

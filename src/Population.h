@@ -20,6 +20,7 @@ class Population
     unsigned int getSize() { return currentSize; }
     void generate(Matrix* initialMatrix, const unsigned int initialPopulationSize);
     void select(const unsigned int selectionSize);
+    Matrix* getFinalMatrix();
     void mutate(const unsigned int newPopulationSize);
     void displayPopulation();
     void displayFirstNorm(){ std::cout << population.at(0)->getNorm() << std::endl; }

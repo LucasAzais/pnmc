@@ -45,7 +45,7 @@ main(int argc, char** argv)
 {
   using namespace pnmc;
 
-  try
+  //try
   {
     boost::optional<conf::configuration> conf_opt;
     try
@@ -88,12 +88,12 @@ main(int argc, char** argv)
     }
     return 0;
   }
-  catch (std::exception& e)
+  /*catch (std::exception& e)
   {
     std::cerr << "Fatal error. Please report the following to a.hamez@isae.fr." << std::endl;
     std::cerr << e.what() << std::endl;
     return -1;
-  }
+  }*/
 }
 
 /*------------------------------------------------------------------------------------------------*/

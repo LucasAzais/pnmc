@@ -18,6 +18,7 @@ class Matrix
     unsigned int currentNorm;
     matrix_type matrix; //1 vector = 1 row
     std::unordered_set<row_type> setMatrix;
+    std::vector<std::string> idList;
 
   public:
     Matrix();
@@ -27,6 +28,7 @@ class Matrix
     unsigned int getColumnNumber() { return columnNumber; }
     unsigned int getRowNumber() { return rowNumber; }
     unsigned int getNorm() { return currentNorm; }
+    std::vector<std::string> getStringIdList() { return idList; }
 
     const row_type* getRow(unsigned int row);
     const column_type* getColumn(unsigned int column);

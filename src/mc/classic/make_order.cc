@@ -2,17 +2,17 @@
 #include <random>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include <unordered_map>
 #include <deque>
 #include <sdd/order/order.hh>
 #include <sdd/order/strategies/force.hh>
 
+#include "Population.h"
+#include "matrixModel/Matrix.h"
 #include "mc/classic/dump.hh"
 #include "mc/classic/make_order.hh"
-
-#include "mc/classic/force/Variable.h"
-#include "mc/classic/force/HyperEdge.h"
 
 namespace pnmc { namespace mc { namespace classic {
 
@@ -23,69 +23,82 @@ using sdd_conf = sdd::conf1;
 sdd::order<sdd_conf>
 make_order(const conf::configuration& conf, statistics& stats, const pn::net& net)
 {
-  std::unordered_map<std::string, Variable> variables_holder;
-  std::deque<HyperEdge> edges_holder;
 
-  unsigned int pos = 0; 
-  for (const auto& place : net.places())
+  Matrix matrix = Matrix(net);
+
+  //matrix.displayMatrix();
+  std::cout << matrix.getNorm() << std::endl;
+  std::cout << std::endl;
+
+  std::ifstream file;
+  file.open("../src/conf.ini");
+
+  if(file.good())
   {
-    if (place.connected())
-    {
-      variables_holder.emplace(place.id, Variable(place.id, pos++));
-    }
-  }
+
+    int buffer_size = 256;
+    char init_pop[buffer_size];
+    char it_num[buffer_size];
+    char mut_size[buffer_size];
+    char select_size[buffer_size];
+
+    file.getline(init_pop, buffer_size);
+    file.getline(it_num, buffer_size);
+    file.getline(mut_size, buffer_size);
+    file.getline(select_size, buffer_size);
+
+    std::string init_pop_str (init_pop);
+    std::string it_num_str (it_num);
+    std::string mut_size_str (mut_size);
+    std::string select_size_str (select_size);
+
+    init_pop_str.erase(0, 21);
+    it_num_str.erase(0, 19);
+    mut_size_str.erase(0, 16);
+    select_size_str.erase(0, 17);;
+
+    const unsigned int INITIAL_POPULATION = std::stoi( init_pop_str );
+    const unsigned int ITERATION_NUMBER = std::stoi( it_num_str );
+    const unsigned int MUTATION_SIZE = std::stoi( mut_size_str );
+    const unsigned int SELECTION_SIZE = std::stoi( select_size_str );
   
-  for (const auto& transition : net.transitions())
-  {
-   // HyperEdge& edge = *edges_holder.insert(edges_holder.end(), HyperEdge());
-    edges_holder.emplace_back();
-    HyperEdge& edge = edges_holder.back();
-    edge.variables.reserve(transition.post.size() + transition.pre.size());
+    Population pop;
 
-    for (const auto& arc : transition.pre)
-    {
-      Variable& v = variables_holder.find(arc.first)->second;
-      edge.variables.push_back(&v);
-      v.edges().push_back(&edge);
+    if(conf.order_ordering_force) {
+      std::cout << "GLaDOS is working" << std::endl;
+      std::cout << std::endl;
+
+      pop.generate(&matrix, INITIAL_POPULATION);
+
+      for(unsigned int i = 0; i < ITERATION_NUMBER; ++i)
+      {
+    
+      pop.mutate(pop.getSize()*MUTATION_SIZE);
+      pop.select(SELECTION_SIZE);
+
+      }
+      
+      matrix = *(pop.getFinalMatrix());
+
+      pop.displayFirstNorm();
     }
-
-    for (const auto& arc : transition.post)
-    {
-      Variable& v = variables_holder.find(arc.first)->second;
-      edge.variables.push_back(&v);
-      v.edges().push_back(&edge);
-    }
-  }
-  
-  std::vector<Variable*> variables;
-  variables.reserve(variables_holder.size());
-  for (auto& v : variables_holder)
-  {
-    variables.push_back(&v.second);
   }
 
-  std::vector<HyperEdge*> edges;
-  edges.reserve(edges_holder.size());
-  for (auto& e : edges_holder)
-  {
-    edges.push_back(&e);
-  }
+  file.close();
 
-  if(conf.order_ordering_force) {
-    applyForce(variables,edges);
-  }
-
-  // Build the order here. Let's do a sort in the meantime.
+  /*// Build the order here. Let's do a sort in the meantime.
   std::sort( variables.begin(), variables.end()
            , [](Variable* lhs, Variable* rhs)
-               {return lhs->position() < rhs->position();});
+               {return lhs->position() < rhs->position();});*/
 
   // Return the order
   sdd::order_builder<sdd_conf> ob;
+  std::vector<std::string> idList = matrix.getStringIdList();
+
   // We push on top of the order so we need to iterate in the reverse order
-  for (auto rcit = variables.rbegin(); rcit != variables.rend(); ++rcit)
+  for (auto rcit = idList.rbegin(); rcit != idList.rend(); ++rcit)
   {
-    ob.push((*rcit)->id());
+    ob.push(*rcit);
   }
   return ob;
 }
