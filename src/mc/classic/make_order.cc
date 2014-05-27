@@ -31,7 +31,7 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   std::cout << std::endl;
 
   std::ifstream file;
-  file.open("../src/conf.ini");
+  file.open(conf.conf_file_path);
 
   if(file.good())
   {
@@ -64,9 +64,7 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   
     Population pop;
 
-    if(conf.order_ordering_force) {
-      std::cout << "GLaDOS is working" << std::endl;
-      std::cout << std::endl;
+    if(conf.order_ordering_matrix) {
 
       pop.generate(&matrix, INITIAL_POPULATION);
 

@@ -78,6 +78,12 @@ const auto order_random_str = "order-random";
 const auto order_flat_str = "order-flat";
 const auto order_min_height_str = "order-min-height";
 const auto order_force_str = "order-force";
+const auto order_matrix_str = "order-matrix";
+
+// Configuration file options
+const auto conf_file_short_path_str = "conf-short";
+const auto conf_file_medium_path_str = "conf-medium";
+const auto conf_file_long_path_str = "conf-long";
 
 // Homomorphisms options
 const auto hom_show_relation_str = "hom-show-relation";
@@ -129,6 +135,10 @@ fill_configuration(int argc, char** argv)
     (order_min_height_str       , po::value<unsigned int>()->default_value(10)
                                 , "Minimal number of variables at every level of the SDD")
     (order_force_str            , "Use the FORCE ordering heuristic")
+    (order_matrix_str           , "Use the Matrix ordering heuristic")
+    (conf_file_short_path_str   , "Use the Matrix ordering heuristic with a short time algorithm")
+    (conf_file_medium_path_str  , "Use the Matrix ordering heuristic with a medium time algorithm")
+    (conf_file_long_path_str    , "Use the Matrix ordering heuristic with a long time algorithm")
   ;
 
   po::options_description hom_options("Homomorphisms options");
@@ -246,6 +256,21 @@ fill_configuration(int argc, char** argv)
   conf.order_force_flat = vm.count(order_flat_str);
   conf.order_min_height = vm[order_min_height_str].as<unsigned int>();
   conf.order_ordering_force = vm.count(order_force_str);
+  conf.order_ordering_matrix = vm.count(order_matrix_str);
+
+  // Matrix algorithm configuration options
+  if( vm.count(conf_file_short_path_str) )
+  {
+    conf.conf_file_path = "../src/conf_short.ini"; 
+  }
+  else if( vm.count(conf_file_medium_path_str) )
+  {
+    conf.conf_file_path = "../src/conf_medium.ini"; 
+  }
+  else if( vm.count(conf_file_long_path_str) )
+  {
+    conf.conf_file_path = "../src/conf_long.ini"; 
+  }
 
   // Hom options
   conf.show_relation = vm.count(hom_show_relation_str);
@@ -275,7 +300,7 @@ fill_configuration(int argc, char** argv)
   {
     conf.json_file = vm[json_str].as<std::string>();
   }
-  if (conf.order_ordering_force)
+  if (conf.order_ordering_force || conf.order_ordering_matrix)
   {
     conf.order_force_flat = true;
   }

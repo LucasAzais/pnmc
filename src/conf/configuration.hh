@@ -44,6 +44,10 @@ struct configuration
   bool order_ordering_force;
   unsigned int order_min_height;
 
+  /// @brief Use the Matrix ordering heuristic.
+  bool order_ordering_matrix;
+  std::string conf_file_path;
+
   /// @brief Show the homomorphism of the transition relation.
   bool show_relation;
 
