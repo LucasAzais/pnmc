@@ -81,9 +81,7 @@ const auto order_force_str = "order-force";
 const auto order_matrix_str = "order-matrix";
 
 // Configuration file options
-const auto conf_file_short_path_str = "conf-short";
-const auto conf_file_medium_path_str = "conf-medium";
-const auto conf_file_long_path_str = "conf-long";
+const auto matrix_conf_file_path_str = "matrix-conf";
 
 // Homomorphisms options
 const auto hom_show_relation_str = "hom-show-relation";
@@ -136,9 +134,7 @@ fill_configuration(int argc, char** argv)
                                 , "Minimal number of variables at every level of the SDD")
     (order_force_str            , "Use the FORCE ordering heuristic")
     (order_matrix_str           , "Use the Matrix ordering heuristic")
-    (conf_file_short_path_str   , "Use the Matrix ordering heuristic with a short time algorithm")
-    (conf_file_medium_path_str  , "Use the Matrix ordering heuristic with a medium time algorithm")
-    (conf_file_long_path_str    , "Use the Matrix ordering heuristic with a long time algorithm")
+    (matrix_conf_file_path_str       , po::value<std::string>(), "Use the Matrix ordering heuristic with a short time algorithm")
   ;
 
   po::options_description hom_options("Homomorphisms options");
@@ -259,17 +255,9 @@ fill_configuration(int argc, char** argv)
   conf.order_ordering_matrix = vm.count(order_matrix_str);
 
   // Matrix algorithm configuration options
-  if( vm.count(conf_file_short_path_str) )
+  if( vm.count(matrix_conf_file_path_str) )
   {
-    conf.conf_file_path = "../src/conf_short.ini"; 
-  }
-  else if( vm.count(conf_file_medium_path_str) )
-  {
-    conf.conf_file_path = "../src/conf_medium.ini"; 
-  }
-  else if( vm.count(conf_file_long_path_str) )
-  {
-    conf.conf_file_path = "../src/conf_long.ini"; 
+    conf.matrix_conf_file_path = vm[matrix_conf_file_path_str].as<std::string>(); 
   }
 
   // Hom options
