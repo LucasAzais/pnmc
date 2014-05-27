@@ -110,10 +110,13 @@ void applyForce(std::vector<Variable*>& variables, std::vector<HyperEdge*>& edge
 	for(int i=0; i<1000; i++) {
 		if(ordered_pre_post) { order_pre_post(variables,edges); }
 		double current_span = iterate(variables,edges);
-		if(current_span < min_span) { min_span = current_span; }
+		if(current_span < min_span) {
+		  counter = 0;
+		  min_span = current_span;
+		}
 		else {
 			counter ++;
-			if(counter > 10) { return; }
+			if(counter > 100) { return; }
 		}
 	}
 };
