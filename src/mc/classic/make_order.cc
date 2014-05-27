@@ -31,7 +31,7 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
   std::cout << std::endl;
 
   std::ifstream file;
-  file.open(conf.conf_file_path);
+  file.open(conf.matrix_conf_file_path);
 
   if(file.good())
   {
