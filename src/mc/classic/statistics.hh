@@ -21,6 +21,7 @@ struct statistics
   std::chrono::duration<double> dead_states_relation_duration;
   std::chrono::duration<double> dead_states_rewrite_duration;
   std::chrono::duration<double> dead_states_duration;
+  std::chrono::duration<double> matrix_order_duration;
 
   long double nb_states;
 
@@ -31,7 +32,7 @@ struct statistics
   statistics(const conf::configuration& c)
     : conf(c), relation_duration(), rewrite_duration(), state_space_duration(), force_duration()
     , dead_states_relation_duration(), dead_states_rewrite_duration()
-    , dead_states_duration(), nb_states(0), interrupted(false), sdd_ut_size()
+    , dead_states_duration(), matrix_order_duration(), nb_states(0), interrupted(false), sdd_ut_size()
   {}
 };
 

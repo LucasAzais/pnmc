@@ -17,6 +17,7 @@
 namespace pnmc { namespace mc { namespace classic {
 
 using sdd_conf = sdd::conf1;
+namespace chrono = std::chrono;
 
 /*------------------------------------------------------------------------------------------------*/
 
@@ -24,11 +25,9 @@ sdd::order<sdd_conf>
 make_order(const conf::configuration& conf, statistics& stats, const pn::net& net)
 {
 
-  Matrix matrix = Matrix(net);
+  chrono::time_point<chrono::system_clock> start = chrono::system_clock::now();
 
-  //matrix.displayMatrix();
-  std::cout << matrix.getNorm() << std::endl;
-  std::cout << std::endl;
+  Matrix matrix = Matrix(net);
 
   std::ifstream file;
   if(conf.matrix_conf_file_path){
@@ -80,12 +79,12 @@ make_order(const conf::configuration& conf, statistics& stats, const pn::net& ne
         
         matrix = *(pop.getFinalMatrix());
 
-        pop.displayFirstNorm();
       }
     }
 
-    file.close();
+    stats.matrix_order_duration = chrono::system_clock::now() - start;
 
+    file.close();
 }
 
   /*// Build the order here. Let's do a sort in the meantime.
